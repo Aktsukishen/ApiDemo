@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">ApiDemo</string>
+    <string name="local_service_started">Local service has started</string>
+    <string name="local_service_stopped">Local service has stopped</string>
+    <string name="local_service_label">Sample Local Service</string>
+    <string name="local_service_controller">This demonstrates how you can implement services that
+    may be started and stopped as desired.</string>
+    <string name="start_service">Start Service</string>
+    <string name="stop_service">Stop Service</string>
+    <string name="start_service_foreground">Start Service Foreground</string>
+    <string name="start_service_background">Start Service Background</string>
+    <string name="foreground_service_started">Service is in the foreground</string>
+    <string name="alarm_service_label">Sample Alarm Service</string>
+
+
+    <string name="local_service_binding">This demonstrates how you can connect with a persistent
+    service. Notice how it automatically starts for you , and play around with the interaction
+        between this and Local Service Controller.
+    </string>
+    <string name="bind_service">Bind Service</string>
+    <string name="unbind_service">Unbind Service</string>
+    <string name="local_service_connected">Connected to local service</string>
+    <string name="local_service_disconnected">Disconnected from local service</string>
+
+    <string name="messenger_service_binding">This demonstrates how you can communicate with a remote service
+    using Messenger</string>
+    <string name="remote_service_connected">Connected to remote service</string>
+    <string name="remote_service_disconnected">Disconnected from remote service</string>
+    <string name="remote_service_started">Remote service started</string>
+    <string name="remote_service_stopped">Remote service stopped</string>
+    <string name="remote_service_binding">This demonstrates hw you can connect with a persistent
+    service running in another process.Use the kill button to see what happens when
+    the process crashes.</string>
+    <string name="kill_process">Kill Process</string>
+    <string name="remote_call_failed">Failure calling remote service</string>
+
+    <string name="foreground_service_controller">This demonstrates how you can implement
+    services that rum in the foreground when needed.
+    </string>
+
+    <string name="activity_local_service_controller">App/Service/Local Service Controller</string>
+    <string name="activity_local_service_binding">App/Service/Local Service Binding</string>
+    <string name="activity_messenger_service_binding">App/Service/Messenger Service</string>
+    <string name="activity_remote_service_controller">App/Service/Remote Service Controller</string>
+    <string name="activity_remote_service_binding">App/Service/Remote Service Binding</string>
+    <string name="activity_foreground_service_controller">App/Service/Foreground Service Controller</string>
+
+</resources>

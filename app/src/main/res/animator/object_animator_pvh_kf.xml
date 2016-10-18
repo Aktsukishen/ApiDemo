@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="1000"
+    android:repeatCount="1"
+    android:repeatMode="reverse"
+    >
+    <propertyValuesHolder android:propertyName="x">
+        <keyframe android:fraction="0" android:value="800"/>
+        <keyframe android:fraction=".2" android:value="1000"/>
+        <keyframe android:fraction="1" android:value="400"/>
+    </propertyValuesHolder>
+    <propertyValuesHolder android:propertyName="y">
+        <keyframe android:fraction=".2" android:value="300"/>
+        <keyframe  android:value="1000"/>
+    </propertyValuesHolder>
+
+</objectAnimator>

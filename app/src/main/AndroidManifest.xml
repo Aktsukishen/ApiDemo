@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.lishensong.apidemo">
+
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:hardwareAccelerated="true"
+        >
+        <activity android:name=".ApiDemo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Service -->
+        <service android:name=".app.LocalService" android:stopWithTask="true"/>
+
+        <activity android:name=".app.LocalServiceActivities$Controller"
+            android:label="@string/activity_local_service_controller"
+            android:launchMode="singleTop"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".app.LocalServiceActivities$Binding"
+            android:label="@string/activity_local_service_binding"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <!--运行在另一个进程中不会阻塞当前进程-->
+        <service android:name=".app.MessengerService" android:process=":remote"/>
+        <activity android:name=".app.MessengerServiceActivities$Binding"
+            android:label="@string/activity_messenger_service_binding"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <service android:name=".app.RemoteService" android:process=":remote"/>
+        <activity android:name=".app.RemoteService$Controller"
+            android:label="@string/activity_remote_service_controller"
+            android:launchMode="singleTop"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".app.RemoteService$Binding"
+            android:label="@string/activity_remote_service_binding"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+        <service android:name=".app.ForegroundService"/>
+        <activity android:name=".app.ForegroundService$Controller"
+            android:label="@string/activity_foreground_service_controller"
+            android:launchMode="singleTop"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Animation 相关-->
+        <activity android:name=".animation.ActivityTransition"
+            android:label="Animation/Activity Transition"
+            android:enabled="@bool/atLeastRelease"
+            android:theme="@style/ActivityTransitionTheme"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".animation.ActivityTransitionDetails"
+            android:label="Animation/Details of a specific thingy"
+            android:theme="@style/ActivityTransitionTheme"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".animation.AnimationLoading"
+            android:label="Animation/Loading"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".animation.BouncingBalls"
+            android:label="Animation/Bouncing Balls"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".animation.LayoutAnimationsByDefault"
+            android:label="Animation/Default Layout Animations"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".animation.LayoutAnimations"
+            android:label="Animation/Layout Animations"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <!-- ##################################################  -->
+        <!--                View Demo                            -->
+        <!-- ##################################################  -->
+
+        <!-- ListView -->
+        <activity android:name=".view.ListActivities$List1"
+            android:label="Views/Lists/01. Array"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List2"
+            android:label="Views/Lists/02. Cursor (People)"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List3"
+            android:label="Views/Lists/03. Cursor (People From Loader)"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List4"
+            android:label="Views/Lists/04. Cursor (Phones Via Binder)"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List5"
+            android:label="Views/Lists/05. ListAdapter"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List6"
+            android:label="Views/Lists/06. Separators via IsEnabled"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List7"
+            android:label="Views/Lists/07. ListAdapter Collapsed"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+
+    </application>
+
+</manifest>

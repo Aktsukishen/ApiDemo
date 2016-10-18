@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objectAnimator
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="1000"
+    android:repeatCount="1"
+    android:repeatMode="reverse">
+    <propertyValuesHolder android:propertyName="x" android:valueTo="400"/>
+    <propertyValuesHolder android:propertyName="y" android:valueTo="200"/>
+</objectAnimator>

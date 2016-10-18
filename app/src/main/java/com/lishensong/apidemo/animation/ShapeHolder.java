@@ -1,0 +1,91 @@
+package com.lishensong.apidemo.animation;
+
+import android.graphics.Paint;
+import android.graphics.RadialGradient;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.Shape;
+
+/**
+ * Created by li.shensong on 2016/10/11.
+ */
+public class ShapeHolder {
+    private float x =0 ,y =0;
+    private ShapeDrawable shape;
+    private int color;
+    private RadialGradient gradient;
+    private float alpha = 1f;
+    private Paint paint;
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public ShapeDrawable getShape() {
+        return shape;
+    }
+
+    public void setShape(ShapeDrawable shape) {
+        this.shape = shape;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+        shape.getPaint().setColor(color);
+    }
+
+    public RadialGradient getGradient() {
+        return gradient;
+    }
+
+    public void setGradient(RadialGradient gradient) {
+        this.gradient = gradient;
+    }
+
+    public Paint getPaint() {
+        return paint;
+    }
+
+    public void setPaint(Paint paint) {
+        this.paint = paint;
+    }
+
+    public void setAlpha(float alpha){
+        this.alpha = alpha;
+        shape.setAlpha((int)((alpha * 255f) + .5f));
+    }
+
+    public float getWidth(){
+        return shape.getShape().getWidth();
+    }
+    public void setWidth(float width){
+        Shape s = shape.getShape();
+        s.resize(width,s.getHeight());
+    }
+    public float getHeight(){
+        return shape.getShape().getHeight();
+    }
+    public void setHeigh(float height){
+        Shape s = shape.getShape();
+        s.resize(s.getWidth(),height);
+    }
+
+    public ShapeHolder(ShapeDrawable s){
+        shape = s;
+    }
+}
