@@ -6,17 +6,27 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.os.Handler;
 import android.provider.ContactsContract.Contacts;
-import android.util.AttributeSet;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -24,16 +34,17 @@ import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lishensong.apidemo.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by li.shensong on 2016/10/13.
  */
 public class ListActivities {
-
     public static class List1 extends  ListActivity{
         private String[] mStrings = Cheeses.sCheeseStrings;
 
@@ -635,11 +646,448 @@ public class ListActivities {
         }
     }
 
-    public static class List8 extends  ListActivity{
+    public static class List8 extends  ListActivity implements
+            AdapterView.OnItemSelectedListener,
+            LoaderManager.LoaderCallbacks<Cursor>,
+            AdapterView.OnItemClickListener{
+        private TextView mPhone;
+
+        private static final String[] PHONE_PROJECTION = new String[]{
+                Phone._ID,
+                Phone.TYPE,
+                Phone.LABEL,
+                Phone.NUMBER,
+                Phone.DISPLAY_NAME
+        };
+
+        private static final int COLUMN_PHONE_TYPE = 1;
+        private static final int COLUMN_PHONE_LABEL = 2;
+        private static final int COLUMN_PHONE_NUMBER = 3;
+
+        private SimpleCursorAdapter mAdapter;
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.list_8);
+            mPhone = (TextView) findViewById(R.id.phone);
+            getListView().setOnItemSelectedListener(this);
+            getListView().setOnItemClickListener(this);
+            getLoaderManager().initLoader(0,null,this);
+            mAdapter = new SimpleCursorAdapter(this,android.R.layout.simple_list_item_1,
+                    null,new String[]{Phone.DISPLAY_NAME},
+                    new int[]{android.R.id.text1},0);
+            setListAdapter(mAdapter);
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if(position >= 0){
+                Cursor c = (Cursor) parent.getItemAtPosition(position);
+                int type = c.getInt(COLUMN_PHONE_TYPE);
+                String phone = c.getString(COLUMN_PHONE_NUMBER);
+                String label = null;
+                if(type == Phone.TYPE_CUSTOM){
+                    label = c.getString(COLUMN_PHONE_LABEL);
+                }
+                String numberType = (String) Phone.getTypeLabel(getResources(),type,label);
+                String text = numberType + ":" + phone;
+                Log.d("List8","text:" + text);
+                mPhone.setText(text);
+            }
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if(position >= 0){
+                Cursor c = (Cursor) parent.getItemAtPosition(position);
+                int type = c.getInt(COLUMN_PHONE_TYPE);
+                String phone = c.getString(COLUMN_PHONE_NUMBER);
+                String label = null;
+                if(type == Phone.TYPE_CUSTOM){
+                    label = c.getString(COLUMN_PHONE_LABEL);
+                }
+                String numberType = (String) Phone.getTypeLabel(getResources(),type,label);
+                String text = numberType + ":" + phone;
+                Log.d("List8","text:" + text);
+                mPhone.setText(text);
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new CursorLoader(this,Phone.CONTENT_URI,PHONE_PROJECTION,Phone.NUMBER + " NOT NULL",null,null);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            mAdapter.swapCursor(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            mAdapter.swapCursor(null);
+        }
+    }
+
+    public static  class List9 extends  ListActivity{
+        PhotoAdapter mAdapter;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.list_9);
+
+            getListView().setEmptyView(findViewById(R.id.empty));
+            mAdapter = new PhotoAdapter(this);
+            Button clear = (Button) findViewById(R.id.clear);
+            clear.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    mAdapter.clearPhotos();
+                }
+            });
+            Button add = (Button) findViewById(R.id.add);
+            add.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    mAdapter.addPhotos();
+                }
+            });
+            getListView().setAdapter(mAdapter);
+        }
+
+        public class PhotoAdapter extends  BaseAdapter{
+            private Integer[] mPhotoPool = {R.drawable.sample_thumb_0,R.drawable.sample_thumb_1,R.drawable.sample_thumb_2,
+                    R.drawable.sample_thumb_3,R.drawable.sample_thumb_4,R.drawable.sample_thumb_5,
+                    R.drawable.sample_thumb_6,R.drawable.sample_thumb_7
+            };
+            private ArrayList<Integer> mPhotos = new ArrayList<>();
+            private Context mContext ;
+
+            public PhotoAdapter(Context c){
+                mContext = c;
+            }
+
+            @Override
+            public int getCount() {
+                return mPhotos.size();
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return position;
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                ImageView img = new ImageView(mContext);
+                img.setImageResource(mPhotos.get(position));
+                img.setAdjustViewBounds(true);
+                img.setLayoutParams(new AbsListView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT
+                ));
+                img.setBackgroundResource(R.drawable.picture_frame);
+                return  img;
+            }
+
+            public void clearPhotos(){
+                mPhotos.clear();
+                notifyDataSetChanged();
+            }
+
+            public void addPhotos() {
+                int whichPhoto = (int)Math.round(Math.random() * (mPhotoPool.length - 1));
+                int newPhoto = mPhotoPool[whichPhoto];
+                mPhotos.add(newPhoto);
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    public static class List10 extends  ListActivity implements  ListView.OnScrollListener{
+        private String[] mStrings = Cheeses.sCheeseStrings;
+
+        private WindowManager mWindowManager;
+        private TextView mDialogText;
+        private boolean mReady;
+        private boolean mShowing;
+        private char mPrevLetter = Character.MIN_VALUE;
+        Handler mHandler = new Handler();
+        private RemoveWindow mRemoveWindow = new RemoveWindow();
+
+        private final class RemoveWindow implements Runnable{
+            @Override
+            public void run() {
+                removeWindow();
+            }
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setListAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,mStrings));
+            getListView().setOnScrollListener(this);
+            mWindowManager = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+
+            LayoutInflater inflater =(LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mDialogText = (TextView) inflater.inflate(R.layout.list_position,null);
+            mDialogText.setVisibility(View.INVISIBLE);
+
+            mDialogText.post(new Runnable() {
+                @Override
+                public void run() {
+                         mReady = true;
+                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,
+                            WindowManager.LayoutParams.TYPE_APPLICATION,
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                            PixelFormat.TRANSLUCENT
+                    );
+                    mWindowManager.addView(mDialogText,lp);
+                }
+            });
+        }
+
+        @Override
+        protected void onResume() {
+            super.onResume();
+            mReady = true;
+        }
+
+        @Override
+        protected void onPause() {
+            super.onPause();
+            removeWindow();
+            mReady = false;
+        }
+
+        //拖动发生改变
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if(mReady){
+                char firstLetter = mStrings[firstVisibleItem].charAt(0);
+                if(!mShowing && firstLetter != mPrevLetter){
+                    mShowing = true;
+                    mDialogText.setVisibility(View.VISIBLE);
+                }
+                mDialogText.setText(((Character)firstLetter).toString());
+                mHandler.removeCallbacks(mRemoveWindow);
+                mHandler.postDelayed(mRemoveWindow,3000);
+                mPrevLetter = firstLetter;
+            }
+        }
+
+        private void removeWindow(){
+            if(mShowing){
+                mShowing = false;
+                mDialogText.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    public static class List11 extends  ListActivity {
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setListAdapter(new ArrayAdapter<>(this,android.R.layout.simple_list_item_single_choice,GENRES));
+            final ListView listView = getListView();
+            listView.setItemsCanFocus(false);
+            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        }
+
+        @Override
+        protected void onStop() {
+            super.onStop();
+            Toast.makeText(this, "checked position:" + GENRES[getListView().getCheckedItemPosition()], Toast.LENGTH_SHORT).show();
+        }
+
+        private static final String[] GENRES = new String[] {
+                "Action", "Adventure", "Animation", "Children", "Comedy", "Documentary", "Drama",
+                "Foreign", "History", "Independent", "Romance", "Sci-Fi", "Television", "Thriller"
+        };
+    }
+
+    public static class List12 extends  ListActivity{
+
+        private static final String[] GENRES = new String[] {
+                "Action", "Adventure", "Animation", "Children", "Comedy", "Documentary", "Drama",
+                "Foreign", "History", "Independent", "Romance", "Sci-Fi", "Television", "Thriller"
+        };
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setListAdapter(new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_multiple_choice,GENRES));
+            final ListView listView = getListView();
+            listView.setItemsCanFocus(false);
+            listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        }
+
+        @Override
+        protected void onStop() {
+            super.onStop();
+            SparseBooleanArray items = getListView().getCheckedItemPositions();
+            if(items != null){
+                for(int i = 0 ; i < GENRES.length ;i++){
+                    boolean selected = items.get(i);
+                    if(selected){
+                        Log.d("List12","selected:" + GENRES[i]);
+                    }
+                }
+            }
+
+        }
+    }
+
+    public static class List13 extends  ListActivity implements View.OnClickListener,View.OnKeyListener{
+
+        private EditText mUserText;
+
+        private ArrayAdapter<String> mAdapter;
+
+        private ArrayList<String> mStrings = new ArrayList<>();
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.list_13);
+            mAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,mStrings);
+            setListAdapter(mAdapter);
+            mUserText = (EditText)findViewById(R.id.userText);
+            mUserText.setOnClickListener(this);
+            mUserText.setOnKeyListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            sendText();
+        }
+
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if(event.getAction() == KeyEvent.ACTION_DOWN){
+                switch (keyCode){
+                    case KeyEvent.KEYCODE_DPAD_CENTER:
+                    case KeyEvent.KEYCODE_ENTER:
+                        sendText();
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private void sendText(){
+            String text = mUserText.getText().toString();
+            mAdapter.add(text);
+            mUserText.setText(null);
+        }
+    }
+
+    public static class List14 extends  ListActivity implements  ListView.OnScrollListener{
+
+        private TextView mStatus;
+
+        private boolean mBusy ;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.list_14);
+            mStatus = (TextView) findViewById(R.id.status);
+            mStatus.setText("Idle");
+            setListAdapter(new SlowAdapter(this));
+            getListView().setOnScrollListener(this);
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            switch (scrollState){
+                case OnScrollListener.SCROLL_STATE_IDLE://停止滚动
+                    mBusy = false;
+                    int first = view.getFirstVisiblePosition();
+                    int count = view.getChildCount();
+                    for(int i = 0 ; i < count ;i++){
+                        TextView t = (TextView) view.getChildAt(i);
+                        if(t.getTag() != null){//tag 标识有没有赋值过
+                            t.setText(mStrings[first + i]);
+                            t.setTag(null);
+                        }
+                    }
+                    mStatus.setText("Idle");
+                    break;
+                case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL://摁住滚动
+                    mBusy = true;
+                    mStatus.setText("Touch scroll");
+                    break;
+                case OnScrollListener.SCROLL_STATE_FLING://放手后滚动
+                    mBusy = true;
+                    mStatus.setText("Fling");
+                    break;
+            }
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            Log.d("List14","enter onScroll");
+        }
+
+        private String[] mStrings = Cheeses.sCheeseStrings;
+
+        private class SlowAdapter extends  BaseAdapter{
+            private LayoutInflater mInflater;
+
+            public SlowAdapter(Context context) {
+                mInflater =(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            }
+
+            @Override
+            public int getCount() {
+                return mStrings.length;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return position;
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView text ;
+                if(convertView == null){
+                    text =(TextView) mInflater.inflate(android.R.layout.simple_list_item_1,parent,false);
+                }else{
+                    text = (TextView) convertView;
+                }
+                if(!mBusy){
+                    text.setText(mStrings[position]);
+                    text.setTag(null);
+                }else{
+                    text.setText("Loading...");
+                    text.setTag(this);
+                }
+                return text;
+            }
         }
     }
 }

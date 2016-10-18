@@ -84,7 +84,6 @@
         <!-- Animation 相关-->
         <activity android:name=".animation.ActivityTransition"
             android:label="Animation/Activity Transition"
-            android:enabled="@bool/atLeastRelease"
             android:theme="@style/ActivityTransitionTheme"
             >
             <intent-filter>
@@ -205,6 +204,67 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".view.ListActivities$List8"
+            android:label="Views/Lists/08. Cursor (Phones)"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List9"
+            android:label="Views/Lists/09. Photos"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List10"
+            android:label="Views/Lists/10. Array (Overlay)"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List11"
+            android:label="Views/Lists/11. Single choice list"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List12"
+            android:label="Views/Lists/12. Multiple choice list"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List13"
+            android:label="Views/Lists/13. Transcript"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List14"
+            android:label="Views/Lists/14. Slow Adapter">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
 
     </application>
 
