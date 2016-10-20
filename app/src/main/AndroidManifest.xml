@@ -266,6 +266,62 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".view.ListActivities$List15"
+            android:label="Views/Lists/15. Efficient Adapter">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List16"
+            android:label="Views/Lists/16. Selection Mode">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List17"
+            android:label="Views/Lists/17. Border selection mode">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ListActivities$List18"
+            android:label="Views/Lists/18.Checked Items">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ExpandableListActivities$ExpandableList1"
+            android:label="Views/Expandable List/1.Custom Adapter">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ExpandableListActivities$ExpandableList2"
+            android:label="Views/Expandable List/2.Cursor (People)">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".view.ExpandableListActivities$ExpandableList3"
+            android:label="Views/Expandable List/3. Simple Adapter">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.lss.apidemo.category"/>
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

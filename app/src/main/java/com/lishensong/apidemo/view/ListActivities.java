@@ -6,15 +6,21 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract.Contacts;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -1088,6 +1094,227 @@ public class ListActivities {
                 }
                 return text;
             }
+        }
+    }
+
+    public static class List15 extends  ListActivity{
+        private static final String[] DATA = Cheeses.sCheeseStrings;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setListAdapter(new EfficientAdapter(this));
+        }
+
+        private static class EfficientAdapter extends BaseAdapter{
+            private LayoutInflater mInflater;
+            private Bitmap mIcon1;
+            private Bitmap mIcon2;
+
+            public EfficientAdapter(Context context) {
+                mInflater = LayoutInflater.from(context);
+                mIcon1 = BitmapFactory.decodeResource(context.getResources(),R.drawable.icon48x48_1);
+                mIcon2 = BitmapFactory.decodeResource(context.getResources(),R.drawable.icon48x48_2);
+            }
+
+            @Override
+            public int getCount() {
+                return DATA.length;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return position;
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                ViewHolder viewHolder;
+                if(convertView == null){
+                    convertView = mInflater.inflate(R.layout.list_item_icon_text,null);
+                    viewHolder = new ViewHolder();
+                    viewHolder.text = (TextView)convertView.findViewById(R.id.text);
+                    viewHolder.icon = (ImageView) convertView.findViewById(R.id.icon);
+                    convertView.setTag(viewHolder);
+                }else{
+                    viewHolder = (ViewHolder)convertView.getTag();
+                }
+                viewHolder.text.setText(DATA[position]);
+                viewHolder.icon.setImageBitmap((position & 1) == 1 ? mIcon1:mIcon2);
+                return convertView;
+            }
+
+            static class ViewHolder{
+                TextView text;
+                ImageView icon;
+            }
+        }
+    }
+
+    public static class List16 extends  ListActivity implements AbsListView.MultiChoiceModeListener{
+
+        private String[] mStrings = Cheeses.sCheeseStrings;
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            ListView lv = getListView();
+            lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+            lv.setMultiChoiceModeListener(this);
+            setListAdapter(new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_checked,mStrings));
+        }
+
+        @Override
+        protected void onPostCreate(Bundle savedInstanceState) {
+            super.onPostCreate(savedInstanceState);
+            getActionBar().setSubtitle("Long press to start selection");
+        }
+
+        @Override
+        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+            setSubTitle(mode);
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.list_select_menu,menu);
+            mode.setTitle("Select Items");
+            setSubTitle(mode);
+            return true;
+        }
+
+        private void setSubTitle(ActionMode mode){
+            final int checkedCount = getListView().getCheckedItemCount();
+            switch (checkedCount){
+                case 0:
+                    mode.setSubtitle(null);
+                    break;
+                case 1:
+                    mode.setSubtitle("One item selected");
+                    break;
+                case 2:
+                    mode.setSubtitle("" + checkedCount + " items selected");
+                    break;
+            }
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.share:
+                    Toast.makeText(List16.this,"Shared " + getListView().getCheckedItemCount() +
+                    " items",Toast.LENGTH_SHORT).show();
+                    mode.finish();
+                    break;
+                default:
+                    Toast.makeText(List16.this,"Clicked " + item.getTitle(),Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+        }
+    }
+
+    public static class List17 extends  ListActivity implements AbsListView.MultiChoiceModeListener{
+
+        private String[] mStrings = Cheeses.sCheeseStrings;
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            ListView lv = getListView();
+            lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+            lv.setMultiChoiceModeListener(this);
+            setListAdapter(new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_activated_1,mStrings));
+        }
+
+        @Override
+        protected void onPostCreate(Bundle savedInstanceState) {
+            super.onPostCreate(savedInstanceState);
+            getActionBar().setSubtitle("Long press to start selection");
+        }
+
+        @Override
+        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+            setSubTitle(mode);
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.list_select_menu,menu);
+            mode.setTitle("Select Items");
+            setSubTitle(mode);
+            return true;
+        }
+
+        private void setSubTitle(ActionMode mode){
+            final int checkedCount = getListView().getCheckedItemCount();
+            switch (checkedCount){
+                case 0:
+                    mode.setSubtitle(null);
+                    break;
+                case 1:
+                    mode.setSubtitle("One item selected");
+                    break;
+                case 2:
+                    mode.setSubtitle("" + checkedCount + " items selected");
+                    break;
+            }
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.share:
+                    Toast.makeText(List17.this,"Shared " + getListView().getCheckedItemCount() +
+                            " items",Toast.LENGTH_SHORT).show();
+                    mode.finish();
+                    break;
+                default:
+                    Toast.makeText(List17.this,"Clicked " + item.getTitle(),Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+        }
+    }
+
+    public static class List18 extends  ListActivity{
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setListAdapter(new ArrayAdapter<>(this,R.layout.list_checked,Cheeses.sCheeseStrings));
+            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            getListView().setItemChecked(0,true);
+        }
+
+        @Override
+        protected void onListItemClick(ListView l, View v, int position, long id) {
+            getListView().setItemChecked(position,true);
         }
     }
 }
